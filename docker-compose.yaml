@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  backend:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: .
+    volumes:
+      - .:/app
+    ports:
+      - "$PORT:8000"
+    command: run --allow-net --allow-env main.ts
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:14
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "$POSTGRES_PORT:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+      interval: 2s
+      timeout: 2s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+        postgres:
+          condition: service_healthy
+    ports:
+      - "4000:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mail@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      GUNICORN_ACCESS_LOGFILE: /dev/null # Disables logging
+    logging:
+      driver: none # Disables logging
+
+volumes:
+  db:
