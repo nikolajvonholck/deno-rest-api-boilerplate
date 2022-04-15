@@ -1,29 +1,30 @@
 name: Migrations and E2E-tests
 
-env:
-  DENO_VERSION: 1.20.3
-
 on:
   push:
     branches:
       - main
 
+env:
+  DENO_VERSION: 1.20.3
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: user
+  POSTGRES_PASSWORD: pass
+  POSTGRES_DB: db
+
 jobs:
+
   tests:
     name: Run migrations
     runs-on: ubuntu-latest
-    env:
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: db
+    
 
     services:
       postgres:
         image: postgres:14
         ports:
-          - "${{ env.POSTGRES_PORT }}:5432"
+          - "$POSTGRES_PORT:5432"
         options: --health-cmd pg_isready --health-interval 2s --health-timeout 2s --health-retries 10
 
         # healthcheck:
