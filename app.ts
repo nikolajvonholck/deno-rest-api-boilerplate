@@ -1,25 +1,18 @@
-import { TodoController } from "./controllers/TodoController.ts";
+import { TodoRouter } from "./controllers/TodoController.ts";
 import {
   routeNotFoundHandler,
   uncaughtExceptionHandler,
 } from "./controllers/utils.ts";
 import { Application, Router } from "./deps.ts";
+import { Todo } from "./models/Todo.ts";
 import { TodoRepo } from "./repositories/TodoRepo.ts";
-import { ConfigService } from "./services/ConfigService.ts";
-import { DatabaseService } from "./services/DatabaseService.ts";
+import { database } from "./services/DatabaseService.ts";
 
 // Initialize services.
-const configService = new ConfigService();
-const databaseService = new DatabaseService(configService);
-const todoRepo = new TodoRepo(databaseService);
-console.info("todoRepo", todoRepo);
+database.link([Todo]);
 
-// Initialize controllers.
-const todoController = new TodoController(todoRepo);
-console.info("todoController", todoController);
-
-const todoRouter = todoController.getRouter();
-console.info("todoRouter", todoRouter);
+// Initialize router.
+const todoRouter = TodoRouter(TodoRepo);
 
 // Construct router.
 const router = new Router();
@@ -33,4 +26,4 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 app.use(routeNotFoundHandler);
 
-export { app, configService };
+export { app };

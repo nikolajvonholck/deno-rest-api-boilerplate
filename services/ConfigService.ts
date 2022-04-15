@@ -9,17 +9,8 @@ const ConfigSchema = z.object({
   POSTGRES_DB: z.string(),
 });
 
-type Config = z.infer<typeof ConfigSchema>;
+export type Config = z.infer<typeof ConfigSchema>;
 
-export interface IConfigService {
-  config: Config;
-}
+const env = Deno.env.toObject();
 
-export class ConfigService implements IConfigService {
-  readonly config: Config;
-
-  constructor() {
-    const env = Deno.env.toObject();
-    this.config = ConfigSchema.parse(env);
-  }
-}
+export const config = ConfigSchema.parse(env);

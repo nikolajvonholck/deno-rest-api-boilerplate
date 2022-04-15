@@ -1,4 +1,3 @@
-import { IDatabaseService } from "../services/DatabaseService.ts";
 import { Todo, TodoDTOCreate, TodoDTOUpdate } from "../models/Todo.ts";
 
 export interface ITodoRepo {
@@ -12,33 +11,34 @@ export interface ITodoRepo {
   delete: (id: string) => Promise<void>;
 }
 
-export class TodoRepo implements ITodoRepo {
-  constructor(readonly databaseService: IDatabaseService) {
-    databaseService.database.link([Todo]);
-  }
+const create = async (todoDtoCreate: TodoDTOCreate): Promise<Todo> => {
+  return await Todo.create(todoDtoCreate);
+};
 
-  async create(todoDtoCreate: TodoDTOCreate): Promise<Todo> {
-    return await Todo.create(todoDtoCreate);
-  }
+const findAll = async (): Promise<Todo[]> => {
+  return await Todo.all();
+};
 
-  async findAll(): Promise<Todo[]> {
-    return await Todo.all();
-  }
+const findById = async (id: string): Promise<Todo | undefined> => {
+  return await Todo.find(id);
+};
 
-  async findById(id: string): Promise<Todo | undefined> {
-    return await Todo.find(id);
-  }
+const update = async (
+  id: string,
+  todoDtoUpdate: TodoDTOUpdate,
+): Promise<Todo | undefined> => {
+  await Todo.where({ id }).update(todoDtoUpdate);
+  return await findById(id);
+};
 
-  async update(
-    id: string,
-    todoDtoUpdate: TodoDTOUpdate,
-  ): Promise<Todo | undefined> {
-    return await Todo.where({ id }).update(todoDtoUpdate) as
-      | Todo
-      | undefined;
-  }
+const _delete = async (id: string): Promise<void> => {
+  await Todo.deleteById(id);
+};
 
-  async delete(id: string): Promise<void> {
-    await Todo.deleteById(id);
-  }
-}
+export const TodoRepo: ITodoRepo = {
+  create,
+  findAll,
+  findById,
+  update,
+  delete: _delete,
+};

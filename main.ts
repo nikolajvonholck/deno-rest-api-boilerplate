@@ -1,6 +1,7 @@
-import { app, configService } from "./app.ts";
+import { app } from "./app.ts";
+import { config } from "./services/ConfigService.ts";
 
-const { PORT } = configService.config;
+const { PORT } = config;
 
 console.info(`Listening on port: ${PORT}..`);
 
