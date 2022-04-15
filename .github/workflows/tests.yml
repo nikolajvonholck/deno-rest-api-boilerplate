@@ -23,7 +23,7 @@ jobs:
       postgres:
         image: postgres:14
         ports:
-          - "$POSTGRES_PORT:5432"
+          - "${{ env.POSTGRES_PORT }}:5432"
         options: --health-cmd pg_isready --health-interval 2s --health-timeout 2s --health-retries 10
 
         # healthcheck:
