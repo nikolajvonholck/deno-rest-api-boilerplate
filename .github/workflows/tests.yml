@@ -7,18 +7,17 @@ on:
 
 env:
   DENO_VERSION: 1.20.3
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: user
+  POSTGRES_PASSWORD: pass
+  POSTGRES_DB: db
 
 jobs:
 
   tests:
     name: Run migrations
-    runs-on: ubuntu-latest
-    env:
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: db
+    runs-on: ubuntu-latest      
 
     services:
       postgres:
