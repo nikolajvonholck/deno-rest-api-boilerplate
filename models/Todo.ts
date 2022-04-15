@@ -19,7 +19,7 @@ export class Todo extends Model {
 }
 
 export const TodoSchema = z.object({
-  id: z.number(),
+  id: z.string().uuid(),
   title: z.string(),
   isCompleted: z.boolean(),
 });
@@ -31,5 +31,6 @@ export const TodoSchemaCreate = TodoSchema.omit({ id: true }).partial({
 });
 export const TodoSchemaUpdate = TodoSchema.omit({ id: true }).partial();
 
+export type TodoDTO = z.infer<typeof TodoSchema>;
 export type TodoDTOCreate = z.infer<typeof TodoSchemaCreate>;
 export type TodoDTOUpdate = z.infer<typeof TodoSchemaUpdate>;
