@@ -56,8 +56,13 @@ export const todoRouter = (todoRepo: TodoRepository) => {
     params: RouteParams<"/:id">,
   ): Promise<StandardResponse<undefined>> => {
     const { id } = IdSchema.parse(params);
-    await todoRepo.delete(id);
-    return { status: Status.OK, result: ok(undefined) };
+    const todo = await todoRepo.findById(id);
+    if (todo) {
+      await todoRepo.delete(id);
+      return { status: Status.OK, result: ok(undefined) };
+    } else {
+      return { status: Status.NotFound, result: error("Not Found") };
+    }
   };
 
   const router = new Router();
