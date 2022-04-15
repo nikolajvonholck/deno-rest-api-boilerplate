@@ -1,4 +1,6 @@
-export type ResultError = string;
+import { z } from "../deps.ts";
+
+export type ResultError = string | z.ZodIssue[];
 
 export type Result<T> =
   | { ok: true; value: T }

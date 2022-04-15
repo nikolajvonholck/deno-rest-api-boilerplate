@@ -20,7 +20,7 @@ Deno.test("todo router", async (t) => {
       const response = await request
         .post(path)
         .send(todoDtoCreateMalformed)
-        .expect(500);
+        .expect(400);
       assertError(response.body);
       await database.close();
     },
@@ -97,7 +97,7 @@ Deno.test("todo router", async (t) => {
       const response = await request
         .put(`${path}/${id}`)
         .send(todoDtoUpdateMalformed)
-        .expect(500);
+        .expect(400);
       assertError(response.body);
 
       // Verify that object is unaffected in database.
