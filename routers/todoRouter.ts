@@ -15,7 +15,7 @@ export const todoRouter = (todoRepo: TodoRepository) => {
     const body = await request.body({ type: "json" }).value;
     const todoDtoCreate = TodoSchemaCreate.parse(body);
     const todo = await todoRepo.create(todoDtoCreate);
-    return { status: Status.OK, result: ok(todo) };
+    return { status: Status.Created, result: ok(todo) };
   };
 
   const readAll = async (): Promise<StandardResponse<Todo[]>> => {
