@@ -1,6 +1,6 @@
 import { Todo, TodoDTOCreate, TodoDTOUpdate } from "../models/Todo.ts";
 
-export interface ITodoRepo {
+export interface TodoRepository {
   create: (todoDtoCreate: TodoDTOCreate) => Promise<Todo>;
   findAll: () => Promise<Todo[]>;
   findById: (id: string) => Promise<Todo | undefined>;
@@ -35,7 +35,7 @@ const _delete = async (id: string): Promise<void> => {
   await Todo.deleteById(id);
 };
 
-export const TodoRepo: ITodoRepo = {
+export const todoRepository: TodoRepository = {
   create,
   findAll,
   findById,

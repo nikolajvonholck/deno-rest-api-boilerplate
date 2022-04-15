@@ -1,5 +1,5 @@
 import { Database, PostgresConnector } from "../deps.ts";
-import { config } from "./ConfigService.ts";
+import { config } from "./config.ts";
 
 const {
   POSTGRES_HOST,

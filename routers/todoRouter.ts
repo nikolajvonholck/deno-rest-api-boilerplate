@@ -4,13 +4,13 @@ import {
   TodoSchemaCreate,
   TodoSchemaUpdate,
 } from "../models/Todo.ts";
-import { ITodoRepo } from "../repositories/TodoRepo.ts";
+import { TodoRepository } from "../repositories/todoRepository.ts";
 import { Request, RouteParams, Router, Status } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
 import { error, ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
 
-export const TodoRouter = (todoRepo: ITodoRepo) => {
+export const todoRouter = (todoRepo: TodoRepository) => {
   const create = async (request: Request): Promise<StandardResponse<Todo>> => {
     const body = await request.body({ type: "json" }).value;
     const todoDtoCreate = TodoSchemaCreate.parse(body);
