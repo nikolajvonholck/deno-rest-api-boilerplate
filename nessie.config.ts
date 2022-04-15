@@ -2,9 +2,7 @@ import {
   ClientPostgreSQL,
   NessieConfig,
 } from "https://deno.land/x/nessie@2.0.5/mod.ts";
-import { ConfigService } from "./services/ConfigService.ts";
-
-const configService = new ConfigService();
+import { config } from "./services/config.ts";
 
 const {
   POSTGRES_HOST,
@@ -12,7 +10,7 @@ const {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_DB,
-} = configService.config;
+} = config;
 
 const options = {
   hostname: POSTGRES_HOST,
@@ -24,10 +22,10 @@ const options = {
 
 const client = new ClientPostgreSQL(options);
 
-const config: NessieConfig = {
+const nessieConfig: NessieConfig = {
   client,
   migrationFolders: ["./db/migrations"],
   seedFolders: ["./db/seeds"],
 };
 
-export default config;
+export default nessieConfig;
