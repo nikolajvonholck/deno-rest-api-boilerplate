@@ -23,6 +23,12 @@ jobs:
     services:
       postgres:
         image: postgres:14
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: pass
+          POSTGRES_DB: db
         ports:
           - "5432:5432"
         options: >-
