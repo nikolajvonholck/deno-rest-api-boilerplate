@@ -1,6 +1,6 @@
 import { app } from "../app.ts";
 import { assertEquals, superoak } from "../dev_deps.ts";
-import { Todo, TodoDTO } from "../models/Todo.ts";
+import { TodoDTO } from "../models/Todo.ts";
 import { todoRepository } from "../repositories/todoRepository.ts";
 import { database } from "../services/database.ts";
 import { Result, ResultError } from "../types/Result.ts";
@@ -26,14 +26,20 @@ const assertError = <T>(
   throw new Error("Impossible");
 };
 
+const path = "/todos";
+const todoDtoCreate = { title: "Title" };
+const todoDtoCreateMalformed = { title: 42 };
+const todoDtoUpdate = { title: "New title", isCompleted: true };
+const todoDtoUpdateMalformed = { isCompleted: 42 };
+
 Deno.test("todo router", async (t) => {
   await t.step(
     "returns error if attempting to create todo with malformed input",
     async () => {
       const request = await superoak(app);
       const response = await request
-        .post("/todos")
-        .send({ title: 42 })
+        .post(path)
+        .send(todoDtoCreateMalformed)
         .expect(500);
       assertError(response.body);
       await database.close();
@@ -43,11 +49,12 @@ Deno.test("todo router", async (t) => {
   await t.step("can create todo with well-formed input", async () => {
     const request = await superoak(app);
     const response = await request
-      .post("/todos")
-      .send({ title: "Test" })
+      .post(path)
+      .send(todoDtoCreate)
       .expect(201);
     const todo = assertOk(response.body as Result<TodoDTO>);
-    assertEquals(todo.title, "Test");
+    assertEquals(todo.title, todoDtoCreate.title);
+    assertEquals(todo.isCompleted, false);
 
     // Verify that object has been saved in database.
     const todoFromDatabase = await todoRepository.findById(todo.id);
@@ -61,7 +68,7 @@ Deno.test("todo router", async (t) => {
 
     const request = await superoak(app);
     const response = await request
-      .get(`/todos/${uuid}`)
+      .get(`${path}/${uuid}`)
       .expect(404);
     assertError(response.body);
 
@@ -69,11 +76,11 @@ Deno.test("todo router", async (t) => {
   });
 
   await t.step("can read todo if it exists", async () => {
-    const todoFromDatabase = await todoRepository.create({ title: "Test" });
+    const todoFromDatabase = await todoRepository.create(todoDtoCreate);
 
     const request = await superoak(app);
     const response = await request
-      .get(`/todos/${todoFromDatabase.id}`)
+      .get(`${path}/${todoFromDatabase.id}`)
       .expect(200);
     const todo = assertOk(response.body as Result<TodoDTO>);
 
