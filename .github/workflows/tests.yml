@@ -7,31 +7,29 @@ on:
 
 env:
   DENO_VERSION: 1.20.3
-  POSTGRES_HOST: localhost
-  POSTGRES_PORT: 5432
-  POSTGRES_USER: user
-  POSTGRES_PASSWORD: pass
-  POSTGRES_DB: db
 
 jobs:
 
   tests:
     name: Run migrations
     runs-on: ubuntu-latest
-    
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db
 
     services:
       postgres:
         image: postgres:14
         ports:
-          - "$POSTGRES_PORT:5432"
-        options: --health-cmd pg_isready --health-interval 2s --health-timeout 2s --health-retries 10
-
-        # healthcheck:
-        #   test: pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
-        #   interval: 2s
-        #   timeout: 2s
-        #   retries: 10
+          - "5432:5432"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Install deno
