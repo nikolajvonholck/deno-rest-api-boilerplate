@@ -1,0 +1,48 @@
+name: Migrations and E2E-tests
+
+env:
+  DENO_VERSION: 1.20.3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Run migrations
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db
+
+    services:
+      postgres:
+        image: postgres:14
+        ports:
+          - "$POSTGRES_PORT:5432"
+        options: --health-cmd pg_isready --health-interval 2s --health-timeout 2s --health-retries 10
+
+        # healthcheck:
+        #   test: pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+        #   interval: 2s
+        #   timeout: 2s
+        #   retries: 10
+
+    steps:
+      - name: Install deno
+        uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{env.DENO_VERSION}}
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Run migrations
+        run: deno run -A --unstable https://deno.land/x/nessie/cli.ts migrate
+
+      - name: Run tests
+        run: deno test

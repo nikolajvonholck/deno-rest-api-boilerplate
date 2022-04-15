@@ -9,16 +9,17 @@ on:
       - main
 
 jobs:
-  lint-and-format:
+  format-and-lint:
+    name: Format and lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@main
-
       - name: Install deno
         uses: denoland/setup-deno@main
         with:
           deno-version: ${{env.DENO_VERSION}}
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
       - name: Check deno formatting
         run: deno fmt --check
