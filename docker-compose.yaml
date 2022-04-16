@@ -10,7 +10,7 @@ services:
       - .:/app
     ports:
       - "$PORT:8000"
-    command: run --allow-net --allow-env main.ts
+    command: run --watch --allow-net --allow-env main.ts
     env_file:
       - .env
 

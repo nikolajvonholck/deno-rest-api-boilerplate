@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  DENO_VERSION: 1.20.3
+  DENO_VERSION: 1.20.5
 
 jobs:
   format-and-lint:
