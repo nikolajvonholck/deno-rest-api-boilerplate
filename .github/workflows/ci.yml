@@ -13,7 +13,7 @@ jobs:
     name: Format and lint
     runs-on: ubuntu-latest
     steps:
-      - name: Install deno
+      - name: Install Deno
         uses: denoland/setup-deno@main
         with:
           deno-version: ${{env.DENO_VERSION}}
@@ -21,8 +21,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Check deno formatting
+      - name: Check Deno formatting
         run: deno fmt --check
 
-      - name: Check deno linting
+      - name: Check Deno linting
         run: deno lint
