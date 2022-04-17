@@ -62,3 +62,9 @@ jobs:
 
       - name: Run tests
         run: ./scripts/run-tests.sh
+
+      - name: Monitor coverage
+        uses: slavcodev/coverage-monitor-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          coverage_path: cov_profile
