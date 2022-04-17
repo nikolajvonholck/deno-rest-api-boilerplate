@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run migrations
-        run: deno run -A --unstable https://deno.land/x/nessie/cli.ts migrate
+        run: ./scripts/run-migrations.sh
 
       - name: Run tests
-        run: deno test --allow-env --allow-net
+        run: ./scripts/run-tests.sh
