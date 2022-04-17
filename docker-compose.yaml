@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  backend:
+  app:
     depends_on:
-      postgres:
+      db:
         condition: service_healthy
     build:
       context: .
@@ -14,7 +14,7 @@ services:
     env_file:
       - .env
 
-  postgres:
+  db:
     image: postgres:14
     restart: always
     env_file:
@@ -22,7 +22,7 @@ services:
     ports:
       - "$POSTGRES_PORT:5432"
     volumes:
-      - db:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
       interval: 2s
@@ -32,7 +32,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     depends_on:
-        postgres:
+        db:
           condition: service_healthy
     ports:
       - "4000:80"
@@ -44,4 +44,4 @@ services:
       driver: none # Disables logging
 
 volumes:
-  db:
+  postgres:
