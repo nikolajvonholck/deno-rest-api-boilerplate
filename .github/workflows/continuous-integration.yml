@@ -66,8 +66,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Cache dependencies
-        run: ./scripts/reload-cache.sh
+      - name: Backup lock-file
+        run: cp lock.json lock-backup.json
+
+      - name: Cache dependencies (overwriting lock-file)
+        run: ./scripts/update-lock-file.sh
+
+      - name: Verify lock-file
+        run: cmp lock.json lock-backup.json
 
       - name: Run migrations
         run: ./scripts/run-migrations.sh
