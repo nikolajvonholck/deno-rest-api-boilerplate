@@ -69,6 +69,7 @@ jobs:
       - name: Check code coverage 
         uses: codecov/codecov-action@v2
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./code-coverage.lcov
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
