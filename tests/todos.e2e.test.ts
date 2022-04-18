@@ -72,6 +72,20 @@ Deno.test("todo router", async (t) => {
     await database.close();
   });
 
+  await t.step("can read all todos", async () => {
+    const request = await superoak(app);
+    const response = await request
+      .get(path)
+      .expect(200);
+    const todos = assertOk(response.body as Result<TodoDTO[]>);
+    const todosFromDatabase = await todoRepository.findAll();
+
+    // Verify that objects have been read from database.
+    assertEquals(todos, todosFromDatabase.map(databaseObjectToDTO));
+
+    await database.close();
+  });
+
   await t.step("cannot update todo if it does not exist", async () => {
     const uuid = globalThis.crypto.randomUUID();
 
