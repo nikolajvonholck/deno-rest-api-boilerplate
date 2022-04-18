@@ -62,3 +62,14 @@ jobs:
 
       - name: Run tests
         run: ./scripts/run-tests.sh
+
+      - name: Make code coverage file 
+        run: deno coverage code-coverage --lcov --output=code-coverage.lcov
+
+      - name: Check code coverage 
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./code-coverage.lcov
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
+

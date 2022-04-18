@@ -1,1 +1,1 @@
-deno test --allow-net --allow-env
+deno test --allow-net --allow-env --coverage=code-coverage
