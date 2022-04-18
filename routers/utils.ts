@@ -25,7 +25,8 @@ export const uncaughtExceptionHandler: Middleware = async (
   }
 };
 
-export const routeNotFoundHandler: Middleware = ({ response }) => {
+export const routeNotFoundHandler: Middleware = async ({ response }, next) => {
+  await next();
   // Always returns not found.
   const result: Result<unknown> = { ok: false, error: "Route not found." };
   const standardResponse = { status: Status.NotFound, result };
