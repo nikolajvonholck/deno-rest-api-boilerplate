@@ -69,4 +69,5 @@ jobs:
       - name: Check code coverage 
         uses: slavcodev/coverage-monitor-action@v1
         with:
-          file: ./coverage.lcov
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          coverage_path: ./coverage.lcov
