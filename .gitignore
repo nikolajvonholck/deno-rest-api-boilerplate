@@ -1,2 +1,2 @@
 .env
-.cov_profile/*
+code-coverage/*

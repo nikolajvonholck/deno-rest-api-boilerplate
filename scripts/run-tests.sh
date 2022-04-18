@@ -1,1 +1,1 @@
-deno test --allow-net --allow-env --coverage=cov_profile
+deno test --allow-net --allow-env --coverage=code-coverage
