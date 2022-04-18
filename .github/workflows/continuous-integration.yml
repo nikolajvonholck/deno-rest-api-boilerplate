@@ -66,6 +66,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Cache dependencies
+        run: ./scripts/reload-cache.sh
+
       - name: Run migrations
         run: ./scripts/run-migrations.sh
 
