@@ -6,18 +6,14 @@ export const databaseObjectToDTO = (object: unknown): Record<string, unknown> =>
 
 export const assertOk = <T>(result: Result<T>): T => {
   assertEquals(result.ok, true, "Result was unexpectedly not ok.");
-  if (result.ok) {
-    return result.value;
-  }
-  throw new Error("Impossible");
+  const { value } = result as unknown as { value: T };
+  return value;
 };
 
 export const assertError = <T>(
   result: Result<T>,
 ): ResultError => {
   assertEquals(result.ok, false, "Result was unexpectedly ok.");
-  if (!result.ok) {
-    return result.error;
-  }
-  throw new Error("Impossible");
+  const { error } = result as unknown as { error: ResultError };
+  return error;
 };
