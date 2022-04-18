@@ -1,5 +1,7 @@
 # A Deno REST API Boilerplate
 
+test.
+
 To run:
 
 ```shell
