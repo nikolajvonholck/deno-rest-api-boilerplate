@@ -1,2 +1,2 @@
 ./scripts/run-migrations.sh
-deno run --watch --allow-net --allow-env main.ts
+deno run --watch --lock=lock.json --cached-only --allow-net --allow-env main.ts
