@@ -3,7 +3,7 @@ import {
   routeNotFoundHandler,
   uncaughtExceptionHandler,
 } from "./routers/utils.ts";
-import { Application, Router } from "./deps.ts";
+import { Application, oakCors, Router } from "./deps.ts";
 import { Todo } from "./models/Todo.ts";
 import { todoRepository } from "./repositories/todoRepository.ts";
 import { database } from "./services/database.ts";
@@ -21,6 +21,10 @@ router.use("/todos", todos.routes(), todos.allowedMethods());
 // Initialize application.
 const app = new Application();
 
+// Enable CORS.
+app.use(oakCors());
+
+// Configure routes.
 app.use(uncaughtExceptionHandler);
 app.use(router.routes());
 app.use(router.allowedMethods());
