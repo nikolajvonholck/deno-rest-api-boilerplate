@@ -10,8 +10,9 @@ on:
       - main
 
 env:
+  DENO_VERSION: 1.20.5
   PORT: 8000
-  POSTGRES_HOST: db
+  POSTGRES_HOST: localhost
   POSTGRES_PORT: 5432
   POSTGRES_USER: user
   POSTGRES_PASSWORD: pass
@@ -21,9 +22,13 @@ jobs:
   formatting-and-linting:
     name: Check formatting and linting
     runs-on: ubuntu-latest
-    container: denoland/deno:alpine-1.20.5
 
     steps:
+      - name: Install Deno
+        uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{env.DENO_VERSION}}
+
       - name: Checkout repo
         uses: actions/checkout@v2
 
