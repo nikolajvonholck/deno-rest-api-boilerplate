@@ -79,6 +79,3 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           files: ./code-coverage.lcov
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
-
