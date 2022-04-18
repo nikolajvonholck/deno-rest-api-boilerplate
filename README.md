@@ -1,4 +1,4 @@
-# todeno
+# A Deno REST API Boilerplate
 
 To run:
 
