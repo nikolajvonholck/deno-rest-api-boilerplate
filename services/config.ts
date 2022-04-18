@@ -7,6 +7,7 @@ const ConfigSchema = z.object({
   POSTGRES_USER: z.string(),
   POSTGRES_PASSWORD: z.string(),
   POSTGRES_DB: z.string(),
+  TOKEN_SECRET: z.string(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
