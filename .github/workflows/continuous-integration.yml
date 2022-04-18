@@ -10,8 +10,9 @@ on:
       - main
 
 env:
+  DENO_VERSION: 1.20.5
   PORT: 8000
-  POSTGRES_HOST: db
+  POSTGRES_HOST: localhost
   POSTGRES_PORT: 5432
   POSTGRES_USER: user
   POSTGRES_PASSWORD: pass
@@ -21,9 +22,13 @@ jobs:
   formatting-and-linting:
     name: Check formatting and linting
     runs-on: ubuntu-latest
-    container: denoland/deno:alpine-1.20.5
 
     steps:
+      - name: Install Deno
+        uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{env.DENO_VERSION}}
+
       - name: Checkout repo
         uses: actions/checkout@v2
 
@@ -36,7 +41,6 @@ jobs:
   migrations-and-tests:
     name: Run migrations and tests
     runs-on: ubuntu-latest
-    container: denoland/deno:alpine-1.20.5
 
     services:
       db:
@@ -54,6 +58,11 @@ jobs:
           --health-retries 5
 
     steps:
+      - name: Install Deno
+        uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{env.DENO_VERSION}}
+
       - name: Checkout repo
         uses: actions/checkout@v2
 
@@ -70,6 +79,3 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           files: ./code-coverage.lcov
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
-
