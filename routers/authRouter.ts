@@ -5,6 +5,7 @@ import { generateRoute } from "../utils/responses.ts";
 import { UserRepository } from "../repositories/userRepository.ts";
 import { compare } from "../utils/hashing.ts";
 import { createToken } from "../utils/jwt.ts";
+import { AuthService } from "../services/authService.ts";
 
 const AuthSchema = z.object({
   email: z.string().email(),
@@ -14,27 +15,18 @@ const AuthSchema = z.object({
 type AuthRequest = z.infer<typeof AuthSchema>;
 type AuthResponse = { token: string };
 
-export const authRouter = (userRepo: UserRepository) => {
+export const authRouter = (authService: AuthService) => {
   const login = async (
     request: Request,
   ): Promise<StandardResponse<AuthResponse>> => {
     const body = await request.body({ type: "json" }).value;
     const authRequest = AuthSchema.parse(body);
-    const { email, password } = authRequest;
-    const user = await userRepo.findByEmail(email);
-
-    if (user) {
-      const isPasswordValid = await compare(
-        password,
-        user.passwordHash as string,
-      );
-      if (isPasswordValid) {
-        const payload = { sub: user.id as string };
-        const token = await createToken(payload);
-        return { status: Status.OK, result: ok({ token }) };
-      }
+    try {
+      const token = await authService.issueUserToken(authRequest);
+      return { status: Status.OK, result: ok({ token }) };
+    } catch (error) {
+      return { status: Status.Unauthorized, result: error("Unauthorized") };
     }
-    return { status: Status.Unauthorized, result: error("Unauthorized") };
   };
 
   const router = new Router();

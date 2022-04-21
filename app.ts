@@ -5,17 +5,24 @@ import {
 } from "./routers/utils.ts";
 import { Application, oakCors, Router } from "./deps.ts";
 import { Todo } from "./models/Todo.ts";
-import { todoRepository } from "./repositories/todoRepository.ts";
 import { database } from "./services/database.ts";
+import { todoRepository } from "./repositories/todoRepository.ts";
+import { userRepository } from "./repositories/userRepository.ts";
+import { User } from "./models/User.ts";
+import { makeAuthService } from "./services/authService.ts";
+import { authRouter } from "./routers/authRouter.ts";
 
 // Initialize services.
-database.link([Todo]);
+database.link([Todo, User]);
+const authService = makeAuthService(userRepository);
 
 // Initialize router.
+const auth = authRouter(authService);
 const todos = todoRouter(todoRepository);
 
 // Construct router.
 const router = new Router();
+router.use("/auth", auth.routes(), auth.allowedMethods());
 router.use("/todos", todos.routes(), todos.allowedMethods());
 
 // Initialize application.
