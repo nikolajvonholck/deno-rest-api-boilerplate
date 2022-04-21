@@ -18,6 +18,7 @@ env:
   POSTGRES_PASSWORD: pass
   POSTGRES_DB: db
   TOKEN_SECRET: secret
+  TOKEN_EXPIRATION_SECONDS: 3600
 
 jobs:
   formatting-and-linting:
