@@ -12,7 +12,16 @@ export interface TodoRepository {
 }
 
 const create = async (todoDtoCreate: TodoDTOCreate): Promise<Todo> => {
-  return await Todo.create(todoDtoCreate);
+  const defaultValues = {
+    isCompleted: false,
+  };
+  const id = crypto.randomUUID();
+  const todo = {
+    ...defaultValues,
+    ...todoDtoCreate,
+    id,
+  };
+  return await Todo.create(todo);
 };
 
 const findAll = async (): Promise<Todo[]> => {
