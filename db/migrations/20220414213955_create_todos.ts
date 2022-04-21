@@ -8,7 +8,7 @@ export default class extends AbstractMigration<ClientPostgreSQL> {
   async up(): Promise<void> {
     await this.client.queryArray(`CREATE TABLE todos
         (
-            id uuid NOT NULL DEFAULT uuid_generate_v4(),
+            id uuid NOT NULL,
             title character varying NOT NULL,
             is_completed boolean NOT NULL DEFAULT false,
             created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,

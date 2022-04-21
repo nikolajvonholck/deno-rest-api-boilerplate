@@ -12,10 +12,6 @@ export class Todo extends Model {
     title: { type: DataTypes.STRING, allowNull: false },
     isCompleted: { type: DataTypes.BOOLEAN, allowNull: false },
   };
-
-  static defaults = {
-    isCompleted: false,
-  };
 }
 
 export const TodoSchema = z.object({
