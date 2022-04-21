@@ -13,7 +13,7 @@ export default class extends AbstractMigration<ClientPostgreSQL> {
             is_completed boolean NOT NULL DEFAULT false,
             created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            CONSTRAINT id PRIMARY KEY (id)
+            CONSTRAINT todos_id PRIMARY KEY (id)
         )`);
   }
 

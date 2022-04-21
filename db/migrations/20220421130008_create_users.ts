@@ -13,7 +13,7 @@ export default class extends AbstractMigration<ClientPostgreSQL> {
             password_hash character varying NOT NULL,
             created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            CONSTRAINT id PRIMARY KEY (id)
+            CONSTRAINT users_id PRIMARY KEY (id)
         )`);
   }
 
