@@ -15,7 +15,7 @@ describe("app", () => {
   });
 
   it("returns not found if route is not found", async () => {
-    const uuid = globalThis.crypto.randomUUID();
+    const uuid = crypto.randomUUID();
 
     const request = await superoak(app);
     const response = await request
@@ -34,7 +34,7 @@ describe("app", () => {
         throw new Error(errorMessage);
       });
 
-      const uuid = globalThis.crypto.randomUUID();
+      const uuid = crypto.randomUUID();
 
       const request = await superoak(app);
       const response = await request

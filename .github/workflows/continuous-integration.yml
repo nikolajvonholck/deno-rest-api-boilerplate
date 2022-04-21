@@ -10,7 +10,7 @@ on:
       - main
 
 env:
-  DENO_VERSION: 1.20.5
+  DENO_VERSION: 1.20.6
   PORT: 8000
   POSTGRES_HOST: localhost
   POSTGRES_PORT: 5432

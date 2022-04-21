@@ -55,7 +55,7 @@ describe("todo router", () => {
 
   describe("GET todos/:id", () => {
     it("cannot read todo if it does not exist", async () => {
-      const uuid = globalThis.crypto.randomUUID();
+      const uuid = crypto.randomUUID();
 
       const request = await superoak(app);
       const response = await request
@@ -95,7 +95,7 @@ describe("todo router", () => {
 
   describe("PUT todos/:id", () => {
     it("cannot update todo if it does not exist", async () => {
-      const uuid = globalThis.crypto.randomUUID();
+      const uuid = crypto.randomUUID();
 
       const request = await superoak(app);
       const response = await request
@@ -159,7 +159,7 @@ describe("todo router", () => {
 
   describe("DELETE todos/:id", () => {
     it("cannot delete todo if it does not exist", async () => {
-      const uuid = globalThis.crypto.randomUUID();
+      const uuid = crypto.randomUUID();
 
       const request = await superoak(app);
       const response = await request
