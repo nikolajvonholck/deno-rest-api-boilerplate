@@ -22,10 +22,7 @@ export const UserSchema = z.object({
 
 export const IdSchema = z.object({ id: z.string().uuid() });
 
-export const UserSchemaCreate = UserSchema.omit({
-  id: true,
-  passwordHash: true,
-}).extend({ password: z.string() });
+export const UserSchemaCreate = UserSchema.omit({ id: true });
 export const UserSchemaUpdate = UserSchemaCreate.partial();
 
 export type UserDTO = z.infer<typeof UserSchema>;

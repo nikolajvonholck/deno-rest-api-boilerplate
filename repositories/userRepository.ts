@@ -1,5 +1,4 @@
 import { User, UserDTOCreate, UserDTOUpdate } from "../models/User.ts";
-import { hash } from "../utils/hashing.ts";
 
 export interface UserRepository {
   create: (userDtoCreate: UserDTOCreate) => Promise<User>;
@@ -14,12 +13,9 @@ export interface UserRepository {
 }
 
 const create = async (userDtoCreate: UserDTOCreate): Promise<User> => {
-  const { password, ...userInfo } = userDtoCreate;
-  const passwordHash = await hash(password);
   const id = crypto.randomUUID();
   const userCreate = {
-    ...userInfo,
-    passwordHash,
+    ...userDtoCreate,
     id,
   };
   return await User.create(userCreate);
@@ -41,13 +37,7 @@ const update = async (
   id: string,
   userDtoUpdate: UserDTOUpdate,
 ): Promise<User | undefined> => {
-  const { password, ...userInfo } = userDtoUpdate;
-  const passwordHash = password && await hash(password);
-  const userUpdate: {
-    email?: string | undefined;
-    passwordHash?: string | undefined;
-  } = { ...userInfo, passwordHash };
-  await User.where({ id }).update(userUpdate);
+  await User.where({ id }).update(userDtoUpdate);
   return await findById(id);
 };
 
