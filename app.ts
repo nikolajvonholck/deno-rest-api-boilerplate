@@ -11,12 +11,16 @@ import { userRepository } from "./repositories/userRepository.ts";
 import { User } from "./models/User.ts";
 import { makeAuthService } from "./services/authService.ts";
 import { authRouter } from "./routers/authRouter.ts";
+import { makeAuthMiddleware } from "./routers/authMiddleware.ts";
 
 // Initialize services.
 database.link([Todo, User]);
 const authService = makeAuthService(userRepository);
 
-// Initialize router.
+// Initialize middlewares.
+const authMiddleware = makeAuthMiddleware(authService);
+
+// Initialize routers.
 const auth = authRouter(authService);
 const todos = todoRouter(todoRepository);
 
@@ -33,6 +37,7 @@ app.use(oakCors());
 
 // Configure routes.
 app.use(uncaughtExceptionHandler);
+app.use(authMiddleware);
 app.use(router.routes());
 app.use(router.allowedMethods());
 app.use(routeNotFoundHandler);
