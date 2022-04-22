@@ -19,7 +19,7 @@ const deriveKeyFromSecret = async (secret: string): Promise<CryptoKey> => {
     buffer,
     { name: "PBKDF2" },
     false,
-    ["deriveKey"],
+    ["deriveBits"],
   );
 
   return await crypto.subtle.deriveKey(
