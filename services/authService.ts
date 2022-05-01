@@ -1,5 +1,7 @@
+import { Status } from "../deps.ts";
 import { User } from "../models/User.ts";
 import { UserRepository } from "../repositories/userRepository.ts";
+import { StandardError } from "../types/StandardError.ts";
 import { compare, hash } from "../utils/hashing.ts";
 import { createToken, Token, verifyToken } from "../utils/jwt.ts";
 
@@ -28,7 +30,7 @@ export const makeAuthService = (userRepo: UserRepository): AuthService => {
         return await createToken(payload);
       }
     }
-    throw new Error("Invalid login credentials.");
+    throw new StandardError(Status.Unauthorized, "Unauthorized");
   };
 
   const verifyUserToken = async (token: Token): Promise<User> => {
@@ -36,8 +38,7 @@ export const makeAuthService = (userRepo: UserRepository): AuthService => {
     const { sub: id } = payload;
     const user = await userRepo.findById(id);
     if (!user) {
-      // Token is valid, but user does not exist. This should not happen.
-      throw new Error("Invalid login credentials.");
+      throw new StandardError(Status.Unauthorized, "Unauthorized");
     }
     return user;
   };
