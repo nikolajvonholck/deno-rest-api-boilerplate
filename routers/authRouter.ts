@@ -3,6 +3,7 @@ import { StandardResponse } from "../types/StandardResponse.ts";
 import { error, ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
 import { AuthService } from "../services/authService.ts";
+import { StandardError } from "../types/StandardError.ts";
 
 const AuthSchema = z.object({
   email: z.string().email(),
@@ -21,8 +22,8 @@ export const authRouter = (authService: AuthService) => {
     try {
       const token = await authService.issueUserToken(authRequest);
       return { status: Status.OK, result: ok({ token }) };
-    } catch (_error) {
-      return { status: Status.Unauthorized, result: error("Unauthorized") };
+    } catch (_err) {
+      throw new StandardError(Status.Unauthorized, "Unauthorized");
     }
   };
 

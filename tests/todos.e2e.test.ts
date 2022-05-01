@@ -49,6 +49,15 @@ describe("todo router", () => {
       },
     );
 
+    it("cannot create todo if unauthenticated", async () => {
+      const request = await superoak(app);
+      const response = await request
+        .post(path)
+        .send(todoDtoCreate)
+        .expect(403);
+      assertError(response.body);
+    });
+
     it("can create todo with well-formed input", async () => {
       const request = await superoak(app);
       const response = await request
@@ -77,6 +86,17 @@ describe("todo router", () => {
         .get(`${path}/${uuid}`)
         .set("Authorization", `Bearer ${token}`)
         .expect(404);
+      assertError(response.body);
+    });
+
+    it("cannot read todo if unauthenticated", async () => {
+      const todoFromDatabase = await todoService.create(user, todoDtoCreate);
+      const id = todoFromDatabase.id as string;
+
+      const request = await superoak(app);
+      const response = await request
+        .get(`${path}/${id}`)
+        .expect(403);
       assertError(response.body);
     });
 
@@ -150,6 +170,21 @@ describe("todo router", () => {
       },
     );
 
+    it("cannot update todo if unauthenticated", async () => {
+      const todoFromDatabaseBefore = await todoService.create(
+        user,
+        todoDtoCreate,
+      );
+      const id = todoFromDatabaseBefore.id as string;
+
+      const request = await superoak(app);
+      const response = await request
+        .put(`${path}/${id}`)
+        .send(todoDtoUpdate)
+        .expect(403);
+      assertError(response.body);
+    });
+
     it("can update todo with well-formed input", async () => {
       const todoFromDatabaseBefore = await todoService.create(
         user,
@@ -189,6 +224,18 @@ describe("todo router", () => {
         .delete(`${path}/${uuid}`)
         .set("Authorization", `Bearer ${token}`)
         .expect(404);
+      assertError(response.body);
+    });
+
+    it("cannot delete todo if unauthenticated", async () => {
+      const todoFromDatabase = await todoService.create(user, todoDtoCreate);
+      const id = todoFromDatabase.id as string;
+
+      const request = await superoak(app);
+      const response = await request
+        .delete(`${path}/${id}`)
+        .expect(403);
+
       assertError(response.body);
     });
 

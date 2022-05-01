@@ -1,5 +1,6 @@
-import { Middleware } from "../deps.ts";
+import { Middleware, Status } from "../deps.ts";
 import { AuthService } from "../services/authService.ts";
+import { StandardError } from "../types/StandardError.ts";
 import { StandardState } from "../types/StandardRoute.ts";
 
 export const makeAuthMiddleware = (
@@ -13,7 +14,10 @@ export const makeAuthMiddleware = (
     if (authorizationHeader) {
       const matches = authorizationHeaderRegEx.exec(authorizationHeader);
       if (!matches) {
-        throw new Error("Invalid authorization header.");
+        throw new StandardError(
+          Status.BadRequest,
+          "Malformed authorization header.",
+        );
       }
       const token = matches[1];
       const user = await authSerive.verifyUserToken(token);

@@ -6,11 +6,12 @@ import {
 } from "../models/Todo.ts";
 import { Router, Status } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
-import { error, ok } from "../types/Result.ts";
+import { ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
 import { StandardContext } from "../types/StandardRoute.ts";
 import { guardAuthenticatedRoute } from "../utils/auth.ts";
 import { TodoService } from "../services/todoService.ts";
+import { StandardError } from "../types/StandardError.ts";
 
 export const makeTodoRouter = (todoService: TodoService) => {
   const create = async (
@@ -39,11 +40,10 @@ export const makeTodoRouter = (todoService: TodoService) => {
     const { id } = IdSchema.parse(params);
     const user = guardAuthenticatedRoute(ctx);
     const todo = await todoService.readOne(user, id);
-    if (todo) {
-      return { status: Status.OK, result: ok(todo) };
-    } else {
-      return { status: Status.NotFound, result: error("Not Found") };
+    if (!todo) {
+      throw new StandardError(Status.NotFound, "Not Found");
     }
+    return { status: Status.OK, result: ok(todo) };
   };
 
   const update = async (
@@ -55,11 +55,10 @@ export const makeTodoRouter = (todoService: TodoService) => {
     const todoDtoUpdate = TodoSchemaUpdate.parse(body);
     const user = guardAuthenticatedRoute(ctx);
     const todo = await todoService.update(user, id, todoDtoUpdate);
-    if (todo) {
-      return { status: Status.OK, result: ok(todo) };
-    } else {
-      return { status: Status.NotFound, result: error("Not Found") };
+    if (!todo) {
+      throw new StandardError(Status.NotFound, "Not Found");
     }
+    return { status: Status.OK, result: ok(todo) };
   };
 
   const _delete = async (
@@ -69,11 +68,10 @@ export const makeTodoRouter = (todoService: TodoService) => {
     const { id } = IdSchema.parse(params);
     const user = guardAuthenticatedRoute(ctx);
     const todo = await todoService.delete(user, id);
-    if (todo) {
-      return { status: Status.OK, result: ok(todo) };
-    } else {
-      return { status: Status.NotFound, result: error("Not Found") };
+    if (!todo) {
+      throw new StandardError(Status.NotFound, "Not Found");
     }
+    return { status: Status.OK, result: ok(todo) };
   };
 
   const router = new Router();
