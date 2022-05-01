@@ -1,6 +1,6 @@
 import { Router, RouterContext, Status, z } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
-import { error, ok } from "../types/Result.ts";
+import { ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
 import { AuthService } from "../services/authService.ts";
 import { StandardError } from "../types/StandardError.ts";
