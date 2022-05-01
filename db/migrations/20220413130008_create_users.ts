@@ -14,7 +14,7 @@ export default class extends AbstractMigration<ClientPostgreSQL> {
         created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT fk_users_id PRIMARY KEY (id),
-        CONSTRAINT unique_email UNIQUE (email);
+        CONSTRAINT unique_email UNIQUE (email)
       )`);
   }
 
