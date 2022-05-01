@@ -6,12 +6,13 @@ import {
   it,
   superoak,
 } from "../dev_deps.ts";
+import { UserInfo } from "../models/User.ts";
 import { userRepository } from "../repositories/userRepository.ts";
 import { AuthResponse } from "../routers/authRouter.ts";
 import { makeAuthService } from "../services/authService.ts";
 import { database } from "../services/database.ts";
 import { verifyToken } from "../utils/jwt.ts";
-import { assertError, assertOk } from "./utils.ts";
+import { assertError, assertOk, databaseObjectToDTO } from "./utils.ts";
 
 const path = "/auth";
 
@@ -19,6 +20,7 @@ const userCredentials = { email: "mail@example.com", password: "password" };
 const authService = makeAuthService(userRepository);
 const existingUser = await userRepository.findByEmail(userCredentials.email);
 const user = existingUser ?? await authService.createUser(userCredentials);
+const token = await authService.issueUserToken(userCredentials);
 await database.close();
 
 describe("auth router", () => {
@@ -83,6 +85,40 @@ describe("auth router", () => {
           .send({ email: userCredentials.email, password: "wrong-password" })
           .expect(401);
         assertError(response.body);
+      },
+    );
+  });
+
+  describe("GET auth/me", () => {
+    it("cannot get user info if unauthenticated", async () => {
+      const request = await superoak(app);
+      const response = await request
+        .get(`${path}/me`)
+        .expect(403);
+      assertError(response.body);
+    });
+
+    it("cannot reach authenticated endpoint with invalid authorization header", async () => {
+      const request = await superoak(app);
+      const response = await request
+        .get(`${path}/me`)
+        .set("Authorization", "Invalid value")
+        .expect(400);
+      assertError(response.body);
+    });
+
+    it(
+      "can get user info if authenticated",
+      async () => {
+        const request = await superoak(app);
+        const response = await request
+          .get(`${path}/me`)
+          .set("Authorization", `Bearer ${token}`)
+          .expect(200);
+        const userInfo = assertOk<UserInfo>(response.body);
+
+        const { passwordHash: _, ...userInfoDb } = databaseObjectToDTO(user);
+        assertEquals(userInfo, userInfoDb);
       },
     );
   });

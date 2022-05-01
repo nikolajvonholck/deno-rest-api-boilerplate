@@ -3,6 +3,8 @@ import { StandardResponse } from "../types/StandardResponse.ts";
 import { ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
 import { AuthService } from "../services/authService.ts";
+import { guardAuthenticatedRoute } from "../utils/auth.ts";
+import { UserInfo } from "../models/User.ts";
 
 const AuthSchema = z.object({
   email: z.string().email(),
@@ -22,7 +24,18 @@ export const authRouter = (authService: AuthService) => {
     return { status: Status.OK, result: ok({ token }) };
   };
 
+  // deno-lint-ignore require-await
+  const me = async (
+    ctx: RouterContext<"/me">,
+  ): Promise<StandardResponse<UserInfo>> => {
+    const user = guardAuthenticatedRoute(ctx);
+    return { status: Status.OK, result: ok(user) };
+  };
+
   const router = new Router();
-  router.post("/login", generateRoute(login));
+  router
+    .post("/login", generateRoute(login))
+    .get("/me", generateRoute(me));
+
   return router;
 };

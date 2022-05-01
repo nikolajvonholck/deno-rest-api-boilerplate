@@ -1,8 +1,8 @@
 import { RouteParams, RouterContext } from "../deps.ts";
-import { User } from "../models/User.ts";
+import { UserInfo } from "../models/User.ts";
 import { StandardResponse } from "./StandardResponse.ts";
 
-export type StandardState = { user?: User };
+export type StandardState = { user?: UserInfo };
 export type StandardContext<R extends string> = RouterContext<
   R,
   RouteParams<R>,

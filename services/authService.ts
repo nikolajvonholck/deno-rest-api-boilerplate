@@ -1,5 +1,5 @@
 import { Status } from "../deps.ts";
-import { User } from "../models/User.ts";
+import { User, UserInfo } from "../models/User.ts";
 import { UserRepository } from "../repositories/userRepository.ts";
 import { StandardError } from "../types/StandardError.ts";
 import { compare, hash } from "../utils/hashing.ts";
@@ -12,7 +12,7 @@ export type UserCredentials = {
 
 export interface AuthService {
   issueUserToken: (userCredentials: UserCredentials) => Promise<Token>;
-  verifyUserToken: (token: Token) => Promise<User>;
+  verifyUserToken: (token: Token) => Promise<UserInfo>;
   createUser: (userCredentials: UserCredentials) => Promise<User>;
 }
 
@@ -33,14 +33,17 @@ export const makeAuthService = (userRepo: UserRepository): AuthService => {
     throw new StandardError(Status.Unauthorized, "Unauthorized");
   };
 
-  const verifyUserToken = async (token: Token): Promise<User> => {
+  const verifyUserToken = async (
+    token: Token,
+  ): Promise<UserInfo> => {
     const payload = await verifyToken(token);
     const { sub: id } = payload;
     const user = await userRepo.findById(id);
     if (!user) {
       throw new StandardError(Status.Unauthorized, "Unauthorized");
     }
-    return user;
+    const { passwordHash: _, ...userWithoutPasswordHash } = user;
+    return userWithoutPasswordHash;
   };
 
   const createUser = async (

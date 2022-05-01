@@ -14,6 +14,8 @@ export class User extends Model {
   };
 }
 
+export type UserInfo = Omit<User, "passwordHash">;
+
 export const UserSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
