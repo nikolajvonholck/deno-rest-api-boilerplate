@@ -4,7 +4,6 @@ import {
   TodoSchemaCreate,
   TodoSchemaUpdate,
 } from "../models/Todo.ts";
-import { TodoRepository } from "../repositories/todoRepository.ts";
 import { Router, Status } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
 import { error, ok } from "../types/Result.ts";

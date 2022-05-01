@@ -2,14 +2,16 @@ import { Values } from "../deps.ts";
 import { Todo, TodoDTOCreate, TodoDTOUpdate } from "../models/Todo.ts";
 
 export interface TodoRepository {
-  create: (todoDtoCreate: TodoDTOCreate) => Promise<Todo>;
+  create: (todoDtoCreate: TodoDTOCreate & { userId: string }) => Promise<Todo>;
   readAll: (where?: Values) => Promise<Todo[]>;
   readOne: (where: Values) => Promise<Todo | undefined>;
   update: (id: string, todoDtoUpdate: TodoDTOUpdate) => Promise<void>;
   delete: (id: string) => Promise<void>;
 }
 
-const create = async (todoDtoCreate: TodoDTOCreate): Promise<Todo> => {
+const create = async (
+  todoDtoCreate: TodoDTOCreate & { userId: string },
+): Promise<Todo> => {
   const defaultValues = {
     isCompleted: false,
   };

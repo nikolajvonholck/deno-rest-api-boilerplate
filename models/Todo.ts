@@ -21,10 +21,12 @@ export const TodoSchema = z.object({
 
 export const IdSchema = z.object({ id: z.string().uuid() });
 
-export const TodoSchemaCreate = TodoSchema.omit({ id: true }).partial({
-  isCompleted: true,
-});
-export const TodoSchemaUpdate = TodoSchema.omit({ id: true }).partial();
+export const TodoSchemaCreate = TodoSchema.omit({ id: true, userId: true })
+  .partial({
+    isCompleted: true,
+  });
+export const TodoSchemaUpdate = TodoSchema.omit({ id: true, userId: true })
+  .partial();
 
 export type TodoDTO = z.infer<typeof TodoSchema>;
 export type TodoDTOCreate = z.infer<typeof TodoSchemaCreate>;

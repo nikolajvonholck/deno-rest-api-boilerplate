@@ -6,14 +6,14 @@ import { User } from "../models/User.ts";
 export interface TodoService {
   create: (
     user: User,
-    todoDtoCreate: Omit<TodoDTOCreate, "userId">,
+    todoDtoCreate: TodoDTOCreate,
   ) => Promise<Todo>;
   readAll: (user: User) => Promise<Todo[]>;
   readOne: (user: User, id: string) => Promise<Todo | undefined>;
   update: (
     user: User,
     id: string,
-    todoDtoUpdate: Omit<TodoDTOUpdate, "userId">,
+    todoDtoUpdate: TodoDTOUpdate,
   ) => Promise<Todo | undefined>;
   delete: (user: User, id: string) => Promise<Todo | undefined>;
 }
@@ -21,7 +21,7 @@ export interface TodoService {
 export const makeTodoService = (todoRepo: TodoRepository): TodoService => {
   const create = async (
     user: User,
-    todoDtoCreate: Omit<TodoDTOCreate, "userId">,
+    todoDtoCreate: TodoDTOCreate,
   ): Promise<Todo> => {
     const userId = user.id as string;
     return await todoRepo.create({ ...todoDtoCreate, userId });
@@ -40,11 +40,11 @@ export const makeTodoService = (todoRepo: TodoRepository): TodoService => {
   const update = async (
     user: User,
     id: string,
-    todoDtoUpdate: Omit<TodoDTOUpdate, "userId">,
+    todoDtoUpdate: TodoDTOUpdate,
   ): Promise<Todo | undefined> => {
     const userId = user.id as string;
     const todoBefore = await readOne(user, id);
-    if (!todoBefore || todoBefore.id !== userId) {
+    if (!todoBefore || todoBefore.userId !== userId) {
       return;
     }
     await todoRepo.update(id, todoDtoUpdate);
@@ -54,7 +54,7 @@ export const makeTodoService = (todoRepo: TodoRepository): TodoService => {
   const _delete = async (user: User, id: string): Promise<Todo | undefined> => {
     const userId = user.id as string;
     const todoBefore = await readOne(user, id);
-    if (!todoBefore || todoBefore.id !== userId) {
+    if (!todoBefore || todoBefore.userId !== userId) {
       return;
     }
     await todoRepo.delete(id);
