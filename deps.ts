@@ -22,6 +22,7 @@ export {
   Model,
   PostgresConnector,
 } from "https://deno.land/x/denodb@v1.0.40/mod.ts";
+export type { Values } from "https://deno.land/x/denodb@v1.0.40/lib/data-types.ts";
 
 export * as bcrypt from "https://deno.land/x/bcrypt@v0.3.0/mod.ts";
 export * as djwt from "https://deno.land/x/djwt@v2.4/mod.ts";

@@ -1,4 +1,4 @@
-import { todoRouter } from "./routers/todoRouter.ts";
+import { makeTodoRouter } from "./routers/todoRouter.ts";
 import {
   routeNotFoundHandler,
   uncaughtExceptionHandler,
@@ -12,17 +12,19 @@ import { User } from "./models/User.ts";
 import { makeAuthService } from "./services/authService.ts";
 import { authRouter } from "./routers/authRouter.ts";
 import { makeAuthMiddleware } from "./routers/authMiddleware.ts";
+import { makeTodoService } from "./services/todoService.ts";
 
 // Initialize services.
 database.link([Todo, User]);
 const authService = makeAuthService(userRepository);
+const todoService = makeTodoService(todoRepository);
 
 // Initialize middlewares.
 const authMiddleware = makeAuthMiddleware(authService);
 
 // Initialize routers.
 const auth = authRouter(authService);
-const todos = todoRouter(todoRepository);
+const todos = makeTodoRouter(todoService);
 
 // Construct router.
 const router = new Router();

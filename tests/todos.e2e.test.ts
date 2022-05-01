@@ -48,7 +48,7 @@ describe("todo router", () => {
       assertEquals(isCompleted, false);
 
       // Verify that object has been saved in database.
-      const todoFromDatabase = await todoRepository.findById(id);
+      const todoFromDatabase = await todoRepository.readOne({ id });
       assertEquals(databaseObjectToDTO(todoFromDatabase), todo);
     });
   });
@@ -86,7 +86,7 @@ describe("todo router", () => {
         .get(path)
         .expect(200);
       const todos = assertOk(response.body as Result<TodoDTO[]>);
-      const todosFromDatabase = await todoRepository.findAll();
+      const todosFromDatabase = await todoRepository.readAll();
 
       // Verify that objects have been read from database.
       assertEquals(todos, todosFromDatabase.map(databaseObjectToDTO));
@@ -121,7 +121,7 @@ describe("todo router", () => {
         assertError(response.body);
 
         // Verify that object is unaffected in database.
-        const todoFromDatabaseAfter = await todoRepository.findById(id);
+        const todoFromDatabaseAfter = await todoRepository.readOne({ id });
         assertEquals(
           databaseObjectToDTO(todoFromDatabaseAfter),
           databaseObjectToDTO(todoFromDatabaseBefore),
@@ -145,7 +145,7 @@ describe("todo router", () => {
       assertEquals(todo.isCompleted, todoDtoUpdate.isCompleted);
 
       // Verify that object has been saved in database.
-      const todoFromDatabaseAfter = await todoRepository.findById(id);
+      const todoFromDatabaseAfter = await todoRepository.readOne({ id });
       // Ignore property 'updatedAt'.
       const { updatedAt: _, ...before } = databaseObjectToDTO(
         todoFromDatabaseBefore,
@@ -180,7 +180,7 @@ describe("todo router", () => {
       assertEquals(v, undefined);
 
       // Verify that object has been delete from database.
-      const todoFromDatabaseAfter = await todoRepository.findById(id);
+      const todoFromDatabaseAfter = await todoRepository.readOne({ id });
       assertEquals(todoFromDatabaseAfter, undefined);
     });
   });

@@ -5,12 +5,10 @@ export class Todo extends Model {
   static timestamps = true;
 
   static fields = {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-    },
+    id: { type: DataTypes.UUID, primaryKey: true },
     title: { type: DataTypes.STRING, allowNull: false },
     isCompleted: { type: DataTypes.BOOLEAN, allowNull: false },
+    userId: { type: DataTypes.UUID, allowNull: false },
   };
 }
 
@@ -18,6 +16,7 @@ export const TodoSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
   isCompleted: z.boolean(),
+  userId: z.string().uuid(),
 });
 
 export const IdSchema = z.object({ id: z.string().uuid() });

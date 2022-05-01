@@ -1,13 +1,11 @@
+import { Values } from "../deps.ts";
 import { Todo, TodoDTOCreate, TodoDTOUpdate } from "../models/Todo.ts";
 
 export interface TodoRepository {
   create: (todoDtoCreate: TodoDTOCreate) => Promise<Todo>;
-  findAll: () => Promise<Todo[]>;
-  findById: (id: string) => Promise<Todo | undefined>;
-  update: (
-    id: string,
-    todoDtoUpdate: TodoDTOUpdate,
-  ) => Promise<Todo | undefined>;
+  readAll: (where?: Values) => Promise<Todo[]>;
+  readOne: (where: Values) => Promise<Todo | undefined>;
+  update: (id: string, todoDtoUpdate: TodoDTOUpdate) => Promise<void>;
   delete: (id: string) => Promise<void>;
 }
 
@@ -24,20 +22,20 @@ const create = async (todoDtoCreate: TodoDTOCreate): Promise<Todo> => {
   return await Todo.create(todo);
 };
 
-const findAll = async (): Promise<Todo[]> => {
-  return await Todo.all();
+const readAll = async (where?: Values): Promise<Todo[]> => {
+  const query = where ? Todo.where(where) : Todo;
+  return await query.all();
 };
 
-const findById = async (id: string): Promise<Todo | undefined> => {
-  return await Todo.find(id);
+const readOne = async (where: Values): Promise<Todo | undefined> => {
+  return await Todo.where(where).first();
 };
 
 const update = async (
   id: string,
   todoDtoUpdate: TodoDTOUpdate,
-): Promise<Todo | undefined> => {
+): Promise<void> => {
   await Todo.where({ id }).update(todoDtoUpdate);
-  return await findById(id);
 };
 
 const _delete = async (id: string): Promise<void> => {
@@ -46,8 +44,8 @@ const _delete = async (id: string): Promise<void> => {
 
 export const todoRepository: TodoRepository = {
   create,
-  findAll,
-  findById,
+  readAll,
+  readOne,
   update,
   delete: _delete,
 };
