@@ -107,6 +107,33 @@ describe("auth router", () => {
       assertError(response.body);
     });
 
+    it("cannot reach authenticated endpoint if user has been deleted", async () => {
+      const tempUserCredentials = {
+        email: "temp-user@example.com",
+        password: "password",
+      };
+      const tempUser = await authService.createUser(tempUserCredentials);
+      const tempUserToken = await authService.issueUserToken(
+        tempUserCredentials,
+      );
+
+      const request1 = await superoak(app);
+      const response1 = await request1
+        .get(`${path}/me`)
+        .set("Authorization", `Bearer ${tempUserToken}`)
+        .expect(200);
+      assertOk<UserInfo>(response1.body);
+
+      await userRepository.delete(tempUser.id as string);
+
+      const request2 = await superoak(app);
+      const response2 = await request2
+        .get(`${path}/me`)
+        .set("Authorization", `Bearer ${tempUserToken}`)
+        .expect(401);
+      assertError(response2.body);
+    });
+
     it(
       "can get user info if authenticated",
       async () => {
