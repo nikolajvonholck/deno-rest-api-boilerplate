@@ -6,22 +6,20 @@ import {
 export default class extends AbstractMigration<ClientPostgreSQL> {
   /** Runs on migrate */
   async up(): Promise<void> {
-    await this.client.queryArray(`CREATE TABLE todos
+    await this.client.queryArray(`CREATE TABLE users
       (
         id uuid NOT NULL,
-        title character varying NOT NULL,
-        is_completed boolean NOT NULL,
+        email character varying NOT NULL,
+        password_hash character varying NOT NULL,
         created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        user_id uuid NOT NULL,
-        CONSTRAINT pk_todos_id PRIMARY KEY (id),
-        CONSTRAINT fk_todos_user_id FOREIGN KEY (user_id) REFERENCES users (id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        CONSTRAINT fk_users_id PRIMARY KEY (id),
+        CONSTRAINT unique_email UNIQUE (email)
       )`);
   }
 
   /** Runs on rollback */
   async down(): Promise<void> {
-    await this.client.queryArray(`DROP TABLE todos`);
+    await this.client.queryArray(`DROP TABLE users`);
   }
 }

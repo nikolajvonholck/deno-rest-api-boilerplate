@@ -4,65 +4,74 @@ import {
   TodoSchemaCreate,
   TodoSchemaUpdate,
 } from "../models/Todo.ts";
-import { TodoRepository } from "../repositories/todoRepository.ts";
-import { Request, RouteParams, Router, Status } from "../deps.ts";
+import { Router, Status } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
-import { error, ok } from "../types/Result.ts";
+import { ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
+import { StandardContext } from "../types/StandardRoute.ts";
+import { guardAuthenticatedRoute } from "../utils/auth.ts";
+import { TodoService } from "../services/todoService.ts";
+import { StandardError } from "../types/StandardError.ts";
 
-export const todoRouter = (todoRepo: TodoRepository) => {
-  const create = async (request: Request): Promise<StandardResponse<Todo>> => {
+export const makeTodoRouter = (todoService: TodoService) => {
+  const create = async (
+    ctx: StandardContext<"/">,
+  ): Promise<StandardResponse<Todo>> => {
+    const { request } = ctx;
     const body = await request.body({ type: "json" }).value;
+    const user = guardAuthenticatedRoute(ctx);
     const todoDtoCreate = TodoSchemaCreate.parse(body);
-    const todo = await todoRepo.create(todoDtoCreate);
+    const todo = await todoService.create(user, todoDtoCreate);
     return { status: Status.Created, result: ok(todo) };
   };
 
-  const readAll = async (): Promise<StandardResponse<Todo[]>> => {
-    const todos = await todoRepo.findAll();
+  const readAll = async (
+    ctx: StandardContext<"/">,
+  ): Promise<StandardResponse<Todo[]>> => {
+    const user = guardAuthenticatedRoute(ctx);
+    const todos = await todoService.readAll(user);
     return { status: Status.OK, result: ok(todos) };
   };
 
   const read = async (
-    _request: Request,
-    params: RouteParams<"/:id">,
+    ctx: StandardContext<"/:id">,
   ): Promise<StandardResponse<Todo>> => {
+    const { params } = ctx;
     const { id } = IdSchema.parse(params);
-    const todo = await todoRepo.findById(id);
-    if (todo) {
-      return { status: Status.OK, result: ok(todo) };
-    } else {
-      return { status: Status.NotFound, result: error("Not Found") };
+    const user = guardAuthenticatedRoute(ctx);
+    const todo = await todoService.readOne(user, id);
+    if (!todo) {
+      throw new StandardError(Status.NotFound, "Not Found");
     }
+    return { status: Status.OK, result: ok(todo) };
   };
 
   const update = async (
-    request: Request,
-    params: RouteParams<"/:id">,
+    ctx: StandardContext<"/:id">,
   ): Promise<StandardResponse<Todo>> => {
+    const { request, params } = ctx;
     const { id } = IdSchema.parse(params);
     const body = await request.body({ type: "json" }).value;
     const todoDtoUpdate = TodoSchemaUpdate.parse(body);
-    const todo = await todoRepo.update(id, todoDtoUpdate);
-    if (todo) {
-      return { status: Status.OK, result: ok(todo) };
-    } else {
-      return { status: Status.NotFound, result: error("Not Found") };
+    const user = guardAuthenticatedRoute(ctx);
+    const todo = await todoService.update(user, id, todoDtoUpdate);
+    if (!todo) {
+      throw new StandardError(Status.NotFound, "Not Found");
     }
+    return { status: Status.OK, result: ok(todo) };
   };
 
   const _delete = async (
-    _request: Request,
-    params: RouteParams<"/:id">,
-  ): Promise<StandardResponse<undefined>> => {
+    ctx: StandardContext<"/:id">,
+  ): Promise<StandardResponse<Todo>> => {
+    const { params } = ctx;
     const { id } = IdSchema.parse(params);
-    const todo = await todoRepo.findById(id);
-    if (todo) {
-      await todoRepo.delete(id);
-      return { status: Status.OK, result: ok(undefined) };
-    } else {
-      return { status: Status.NotFound, result: error("Not Found") };
+    const user = guardAuthenticatedRoute(ctx);
+    const todo = await todoService.delete(user, id);
+    if (!todo) {
+      throw new StandardError(Status.NotFound, "Not Found");
     }
+    return { status: Status.OK, result: ok(todo) };
   };
 
   const router = new Router();

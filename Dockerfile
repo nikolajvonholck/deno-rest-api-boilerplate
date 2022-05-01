@@ -1,6 +1,6 @@
-# FROM denoland/deno:alpine-1.20.6
+# FROM denoland/deno:alpine-1.21.1
 # We use the unofficial arm64 image to support hot-reloading.
-FROM lukechannings/deno:v1.20.6
+FROM lukechannings/deno:v1.21.1
 
 EXPOSE 8000
 

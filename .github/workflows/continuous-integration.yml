@@ -10,13 +10,15 @@ on:
       - main
 
 env:
-  DENO_VERSION: 1.20.6
+  DENO_VERSION: 1.21.1
   PORT: 8000
   POSTGRES_HOST: localhost
   POSTGRES_PORT: 5432
   POSTGRES_USER: user
   POSTGRES_PASSWORD: pass
   POSTGRES_DB: db
+  TOKEN_SECRET: secret
+  TOKEN_EXPIRATION_SECONDS: 3600
 
 jobs:
   formatting-and-linting:
