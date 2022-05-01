@@ -5,14 +5,20 @@ import {
   TodoSchemaUpdate,
 } from "../models/Todo.ts";
 import { TodoRepository } from "../repositories/todoRepository.ts";
-import { Request, RouteParams, Router, Status } from "../deps.ts";
+import { Router, Status } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
 import { error, ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
+import { StandardContext } from "../types/StandardRoute.ts";
+import { guardAuthenticatedRoute } from "../utils/auth.ts";
 
 export const todoRouter = (todoRepo: TodoRepository) => {
-  const create = async (request: Request): Promise<StandardResponse<Todo>> => {
+  const create = async (
+    ctx: StandardContext<"/">,
+  ): Promise<StandardResponse<Todo>> => {
+    const { request } = ctx;
     const body = await request.body({ type: "json" }).value;
+    const user = guardAuthenticatedRoute(ctx);
     const todoDtoCreate = TodoSchemaCreate.parse(body);
     const todo = await todoRepo.create(todoDtoCreate);
     return { status: Status.Created, result: ok(todo) };
@@ -24,10 +30,11 @@ export const todoRouter = (todoRepo: TodoRepository) => {
   };
 
   const read = async (
-    _request: Request,
-    params: RouteParams<"/:id">,
+    ctx: StandardContext<"/:id">,
   ): Promise<StandardResponse<Todo>> => {
+    const { params } = ctx;
     const { id } = IdSchema.parse(params);
+    const user = guardAuthenticatedRoute(ctx);
     const todo = await todoRepo.findById(id);
     if (todo) {
       return { status: Status.OK, result: ok(todo) };
@@ -37,12 +44,13 @@ export const todoRouter = (todoRepo: TodoRepository) => {
   };
 
   const update = async (
-    request: Request,
-    params: RouteParams<"/:id">,
+    ctx: StandardContext<"/:id">,
   ): Promise<StandardResponse<Todo>> => {
+    const { request, params } = ctx;
     const { id } = IdSchema.parse(params);
     const body = await request.body({ type: "json" }).value;
     const todoDtoUpdate = TodoSchemaUpdate.parse(body);
+    const user = guardAuthenticatedRoute(ctx);
     const todo = await todoRepo.update(id, todoDtoUpdate);
     if (todo) {
       return { status: Status.OK, result: ok(todo) };
@@ -52,10 +60,11 @@ export const todoRouter = (todoRepo: TodoRepository) => {
   };
 
   const _delete = async (
-    _request: Request,
-    params: RouteParams<"/:id">,
+    ctx: StandardContext<"/:id">,
   ): Promise<StandardResponse<undefined>> => {
+    const { params } = ctx;
     const { id } = IdSchema.parse(params);
+    const user = guardAuthenticatedRoute(ctx);
     const todo = await todoRepo.findById(id);
     if (todo) {
       await todoRepo.delete(id);

@@ -1,4 +1,4 @@
-import { Request, Router, Status, z } from "../deps.ts";
+import { Router, RouterContext, Status, z } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
 import { ok } from "../types/Result.ts";
 import { generateRoute } from "../utils/responses.ts";
@@ -9,13 +9,13 @@ const AuthSchema = z.object({
   password: z.string(),
 });
 
-type AuthRequest = z.infer<typeof AuthSchema>;
 type AuthResponse = { token: string };
 
 export const authRouter = (authService: AuthService) => {
   const login = async (
-    request: Request,
+    ctx: RouterContext<"/login">,
   ): Promise<StandardResponse<AuthResponse>> => {
+    const { request } = ctx;
     const body = await request.body({ type: "json" }).value;
     const authRequest = AuthSchema.parse(body);
     try {

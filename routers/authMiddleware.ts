@@ -1,7 +1,10 @@
 import { Middleware } from "../deps.ts";
 import { AuthService } from "../services/authService.ts";
+import { StandardState } from "../types/StandardRoute.ts";
 
-export const makeAuthMiddleware = (authSerive: AuthService): Middleware => {
+export const makeAuthMiddleware = (
+  authSerive: AuthService,
+): Middleware<StandardState> => {
   const authorizationHeaderRegEx = /^Bearer (.*)$/;
 
   return async (ctx, next) => {

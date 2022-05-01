@@ -5,16 +5,16 @@ import {
   RouterMiddleware,
 } from "../deps.ts";
 import { StandardResponse } from "../types/StandardResponse.ts";
-import { StandardRoute } from "../types/StandardRoute.ts";
+import { StandardRoute, StandardState } from "../types/StandardRoute.ts";
 
-export const generateRoute = <T, R extends string, S>(
+export const generateRoute = <T, R extends string>(
   standardRoute: StandardRoute<T, R>,
-): RouterMiddleware<R, RouteParams<R>, S> => {
+): RouterMiddleware<R, RouteParams<R>, StandardState> => {
   return async (
-    ctx: RouterContext<R, RouteParams<R>, S>,
+    ctx: RouterContext<R, RouteParams<R>, StandardState>,
   ) => {
-    const { request, response, params } = ctx;
-    const standardResponse = await standardRoute(request, params);
+    const { response } = ctx;
+    const standardResponse = await standardRoute(ctx);
     sendStandardResponse(response, standardResponse);
   };
 };
