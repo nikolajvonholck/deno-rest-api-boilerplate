@@ -61,7 +61,7 @@ future project:
 
 ## Configuring Local Development Environment
 
-Prerequisite: Docker and Docker Compose.
+Prerequisites: Docker and Docker Compose.
 
 Create a file called `.env` by making a copy of the file `.env.example`. Next,
 execute:
