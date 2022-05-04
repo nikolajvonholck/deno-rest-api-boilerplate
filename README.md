@@ -36,15 +36,18 @@ TOKEN_EXPIRATION_SECONDS # JWT token expiration time.
 
 ## Scripts
 
-TODO: Add descriptions..
+The scripts are located in the directory `scripts`.
 
-- `update-lock-file.sh`:
-- `reload-cache.sh`:
-- `run-migrations.sh`:
-- `run-seed.sh`:
-- `run-tests.sh`:
-- `run-dev.sh`:
-- `run-prod.sh`:
+- `update-lock-file.sh` update the lock file `lock.json` with hashes of all
+  dependencies.
+- `reload-cache.sh` caches all dependencies while validating each one agains the
+  lock file `lock.json`.
+- `run-migrations.sh` runs any pending migrations against the database.
+- `run-seed.sh` seeds the database.
+- `run-tests.sh` executes all end-to-end tests.
+- `run-dev.sh` starts up the server in hot-reloading mode using the `--watch`
+  flag.
+- `run-prod.sh` starts up the server.
 
 ## Using This Repository as a Template
 
