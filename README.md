@@ -30,8 +30,8 @@ POSTGRES_PORT # Database port
 POSTGRES_USER # Database username
 POSTGRES_PASSWORD # Database password
 POSTGRES_DB # Database name
-TOKEN_SECRET # String used to derive key that signs and verifies JWT tokens.
-TOKEN_EXPIRATION_SECONDS # JWT token expiration time.
+TOKEN_SECRET # String used to derive key that signs and verifies JWT tokens
+TOKEN_EXPIRATION_SECONDS # JWT token expiration time
 ```
 
 ## Scripts
