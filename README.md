@@ -24,7 +24,7 @@ PostgreSQL.
 ## Environment Variables
 
 ```bash
-PORT # Server port
+PORT # API server port
 POSTGRES_HOST # Database host
 POSTGRES_PORT # Database port
 POSTGRES_USER # Database username
@@ -36,32 +36,44 @@ TOKEN_EXPIRATION_SECONDS # JWT token expiration time.
 
 ## Scripts
 
-TODO
+TODO: Add descriptions..
+
+- `update-lock-file.sh`:
+- `reload-cache.sh`:
+- `run-migrations.sh`:
+- `run-seed.sh`:
+- `run-tests.sh`:
+- `run-dev.sh`:
+- `run-prod.sh`:
 
 ## Using This Repository as a Template
 
-TODO: CORS, generate jwt key, codecov.
+Here is a check list if you would like to use this repository as a template for
+a future project:
+
+- [ ] Generate a new value for `TOKEN_SECRET` and configure JWT token expiry by
+      updating `TOKEN_EXPIRATION_SECONDS`.
+- [ ] Configure CORS in `app.ts`.
+- [ ] Consider setting up Codecov for your new repository.
 
 ## Configuring Local Development Environment
 
-TODO.
+Prerequisite: Docker and Docker Compose.
 
-## Old stuff
-
-To run:
+Create a file called `.env` by making a copy of the file `.env.example`. Next,
+execute:
 
 ```shell
-deno run --allow-net --allow-env index.ts
+$ docker compose up
 ```
 
-To create new migration file:
+The API should then be available at `http://localhost:8000`.
+
+## Creating New Migrations
+
+Execute the following command to create a new migration file, replacing
+`[migration-name]` with your desired migration name:
 
 ```shell
-$ deno run -A --unstable https://deno.land/x/nessie/cli.ts make:migration create_todos
-```
-
-To perform migrations:
-
-```shell
-$ deno run -A --unstable https://deno.land/x/nessie/cli.ts migrate
+$ deno run -A --unstable https://deno.land/x/nessie/cli.ts make:migration [migration-name]
 ```
