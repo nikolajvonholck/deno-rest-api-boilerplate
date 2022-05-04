@@ -17,7 +17,7 @@ PostgreSQL.
 - JWT authentication using `djwt` and password hashing using `bcrypt`.
 - CRUD operations with authorization for the example entity `Todo`.
 - End-to-end testing for all endpoints using `superoak`.
-- Continuos integration workflow using GitHub Actions.
+- Continuous integration workflow using GitHub Actions.
 - Integrity checking of dependencies using lock file.
 - Code coverage checking using Codecov.
 
@@ -40,8 +40,8 @@ The scripts are located in the directory `scripts`.
 
 - `update-lock-file.sh` update the lock file `lock.json` with hashes of all
   dependencies.
-- `reload-cache.sh` caches all dependencies while validating each one agains the
-  lock file `lock.json`.
+- `reload-cache.sh` caches all dependencies while validating each one against
+  the lock file `lock.json`.
 - `run-migrations.sh` runs any pending migrations against the database.
 - `run-seed.sh` seeds the database.
 - `run-tests.sh` executes all end-to-end tests.
@@ -51,8 +51,8 @@ The scripts are located in the directory `scripts`.
 
 ## Using This Repository as a Template
 
-Here is a check list if you would like to use this repository as a template for
-a future project:
+Here is a checklist if you would like to use this repository as a template for a
+future project:
 
 - [ ] Generate a new value for `TOKEN_SECRET` and configure JWT token expiry by
       updating `TOKEN_EXPIRATION_SECONDS`.
